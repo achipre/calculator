@@ -7,6 +7,9 @@ function App () {
   const valueSecction = sectionOp
     .split('')
     .filter(item => item !== '=' && item !== '+')
+    .filter(item => item !== '=' && item !== '-')
+    .filter(item => item !== '=' && item !== '÷')
+    .filter(item => item !== '=' && item !== '*')
     .join('')
   const handleAC = () => {
     setValor('')
@@ -34,19 +37,70 @@ function App () {
     setTextAC('C')
   }
   const handleResult = () => {
+    console.log(valueSecction)
+    if (sectionOp.at(-1) === '÷') {
+      setValor(Number(valueSecction) / Number(valor))
+      setSectioOp(`=${Number(valueSecction) / Number(valor)}`)
+    }
+    if (sectionOp.at(-1) === '*') {
+      setValor(Number(valueSecction) * Number(valor))
+      setSectioOp(`=${Number(valueSecction) * Number(valor)}`)
+    }
+    if (sectionOp.at(-1) === '-') {
+      setValor(Number(valueSecction) - Number(valor))
+      setSectioOp(`=${Number(valueSecction) - Number(valor)}`)
+    }
     if (sectionOp.at(-1) === '+') {
-      // const valueSecction = sectionOp
-      //   .split('')
-      //   .filter(item => item !== '=' && item !== '+')
-      //   .join('')
       setValor(Number(valueSecction) + Number(valor))
       setSectioOp(`=${Number(valueSecction) + Number(valor)}`)
     }
   }
-  const handlePlus = () => {
-    if (valor === '' && sectionOp === '') {
-      setSectioOp('=0+')
+  const handleDiv = () => {
+    if (valor !== '') {
+      setSectioOp(`=${valor}÷`)
     }
+    if (valor !== '' && sectionOp !== '') {
+      setSectioOp(`=${Number(valueSecction) / Number(valor)}÷`)
+    }
+    if (Number(valueSecction) === Number(valor)) {
+      setSectioOp(`=${valor}÷`)
+    }
+    if ((valor === '' && sectionOp === '') || sectionOp === '=0÷') {
+      setSectioOp('=0÷')
+    }
+    setValor('')
+  }
+  const handlePor = () => {
+    if (valor !== '') {
+      setSectioOp(`=${valor}*`)
+    }
+    if (valor !== '' && sectionOp !== '') {
+      setSectioOp(`=${Number(valueSecction) * Number(valor)}*`)
+    }
+    if (Number(valueSecction) === Number(valor)) {
+      setSectioOp(`=${valor}*`)
+    }
+    if ((valor === '' && sectionOp === '') || sectionOp === '=0*') {
+      setSectioOp('=0*')
+    }
+    setValor('')
+  }
+  const handleLess = () => {
+    if (valor !== '') {
+      setSectioOp(`=${valor}-`)
+    }
+    if (valor !== '' && sectionOp !== '') {
+      setSectioOp(`=${Number(valueSecction) - Number(valor)}-`)
+    }
+    if (Number(valueSecction) === Number(valor)) {
+      setSectioOp(`=${valor}-`)
+    }
+    if ((valor === '' && sectionOp === '') || sectionOp === '=0-') {
+      setSectioOp('=0-')
+    }
+    setValor('')
+  }
+  const handlePlus = () => {
     if (valor !== '') {
       setSectioOp(`=${valor}+`)
     }
@@ -55,6 +109,9 @@ function App () {
     }
     if (Number(valueSecction) === Number(valor)) {
       setSectioOp(`=${valor}+`)
+    }
+    if ((valor === '' && sectionOp === '') || sectionOp === '=0+') {
+      setSectioOp('=0+')
     }
     setValor('')
   }
@@ -97,7 +154,7 @@ function App () {
           9
         </button>
         <button
-          onClick={() => setValor(valor.toString().concat('÷'))}
+          onClick={handleDiv}
           className="text-[#5D5D5D] h-[calc((100vh-347px)/4)]  hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
         >
           ➗
@@ -130,7 +187,7 @@ function App () {
           6
         </button>
         <button
-          onClick={() => setValor(valor.toString().concat('*'))}
+          onClick={handlePor}
           className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
         >
           ✖️
@@ -169,7 +226,7 @@ function App () {
           3
         </button>
         <button
-          onClick={() => setValor(valor.toString().concat('-'))}
+          onClick={handleLess}
           className="text-[#5D5D5D] h-[calc((100vh-347px)/4)]  hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
         >
           ➖
