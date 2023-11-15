@@ -1,36 +1,76 @@
 import { useState } from 'react'
 
 function App () {
+  const [sectionOp, setSectioOp] = useState('')
   const [valor, setValor] = useState('')
-  const handleCalc = (char) => {
-    if (valor === '') {
-      setValor(char)
-    } else if (valor === 0) {
-      setValor(char)
-    } else if (typeof (Number(valor)) === 'number') {
-      setValor(valor + char.toString())
-    }
+  const [textAC, setTextAC] = useState('AC')
 
-    console.log(valor === '')
-    console.log(char === 0)
-    console.log(valor === 0)
-    console.log(typeof Number(valor) === 'number')
+  const handleAC = () => {
+    setValor('')
+    setTextAC('AC')
+    if (valor === '') {
+      setSectioOp('')
+    }
   }
+
+  const handleCalc = (char) => {
+    if (valor.toString().split('').includes('.') && char === '.') return
+    if (valor.length >= 12) return
+    if (valor === '') setValor(char)
+    if (valor === 0) setValor(char)
+    if (valor !== 0 && valor !== '') setValor(valor.toString().concat(char.toString()))
+    setTextAC('C')
+  }
+
+  const handlePi = () => {
+    setValor(Math.PI)
+    setTextAC('C')
+  }
+  const handleE = () => {
+    setValor(Math.E)
+    setTextAC('C')
+  }
+  const handleResult = () => {
+    if (sectionOp.at(-1) === '+') {
+      const valueSecction = sectionOp
+        .split('')
+        .filter(item => item !== '=' && item !== '+')
+        .join('')
+      console.log(valueSecction)
+      setValor(Number(valueSecction) + Number(valor))
+      setSectioOp(`=${Number(valueSecction) + Number(valor)}`)
+    }
+  }
+  const handlePlus = () => {
+    console.log(valor === '')
+    if ((sectionOp === '' && valor === '')) {
+      setSectioOp('=0+')
+    }
+    if (sectionOp !== '') {
+      setSectioOp(`=${valor}+`)
+    }
+    setValor(valor.toString().concat('+'))
+    setValor('')
+  }
+
   return (
     <main>
-      <input
-        className="bg-transparent w-full outline-none text-[#F5F7F8] font-primary md:text-9xl lg:text-[180px] text-right px-24 cursor-"
-        placeholder="0"
-        maxLength={14}
-        disabled
-        value={valor}
-      />
+      <div className="relative">
+        <input
+          className="bg-transparent relative w-full outline-none text-[#F5F7F8] font-primary md:text-9xl lg:text-[180px] text-right px-24 cursor-"
+          placeholder="0"
+          maxLength={14}
+          disabled
+          value={valor}
+        />
+        <p className="absolute top-2 right-28 text-2xl text-left text-neutral-300">{sectionOp}</p>
+      </div>
       <aside className="text-[#F5F7F8] grid grid-cols-7 p-4 lg:px-24 gap-4 md:text-5xl lg:text-8xl font-primary bg-[#272829]">
         <button
-          onClick={() => setValor('')}
+          onClick={handleAC}
           className="h-[calc((100vh-347px)/4)] [grid-column:1/3] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
         >
-          AC
+          {textAC}
         </button>
         <button
           onClick={() => handleCalc(7)}
@@ -50,7 +90,10 @@ function App () {
         >
           9
         </button>
-        <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)]  hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
+        <button
+          onClick={() => setValor(valor.toString().concat('÷'))}
+          className="text-[#5D5D5D] h-[calc((100vh-347px)/4)]  hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
+        >
           ➗
         </button>
         <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)]  hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
@@ -80,16 +123,25 @@ function App () {
         >
           6
         </button>
-        <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
+        <button
+          onClick={() => setValor(valor.toString().concat('*'))}
+          className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
+        >
           ✖️
         </button>
         <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
           ﹪
         </button>
-        <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
+        <button
+          onClick={handlePi}
+          className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
+        >
           π
         </button>
-        <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
+        <button
+          onClick={handleE}
+          className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
+        >
           e
         </button>
         <button
@@ -110,10 +162,16 @@ function App () {
         >
           3
         </button>
-        <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)]  hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
+        <button
+          onClick={() => setValor(valor.toString().concat('-'))}
+          className="text-[#5D5D5D] h-[calc((100vh-347px)/4)]  hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
+        >
           ➖
         </button>
-        <button className="bg-[#FC5F00] [grid-column:7] [grid-row:3/5] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(252,_95,_0,_0.78)_0%,_#FC5F00_100%)]">
+        <button
+          onClick={handleResult}
+          className="bg-[#FC5F00] [grid-column:7] [grid-row:3/5] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(252,_95,_0,_0.78)_0%,_#FC5F00_100%)]"
+        >
           🟰
         </button>
         <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
@@ -134,7 +192,10 @@ function App () {
         >
           •
         </button>
-        <button className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]">
+        <button
+          onClick={handlePlus}
+          className="text-[#5D5D5D] h-[calc((100vh-347px)/4)] hover:[background:radial-gradient(50%_50%_at_50%_50%,_rgba(0,0,0,_0.28)_0%,_#272829_100%)] hover:border-x-[1px] hover:border-[#464748]"
+        >
           ➕
         </button>
       </aside>
