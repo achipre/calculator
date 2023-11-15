@@ -4,7 +4,10 @@ function App () {
   const [sectionOp, setSectioOp] = useState('')
   const [valor, setValor] = useState('')
   const [textAC, setTextAC] = useState('AC')
-
+  const valueSecction = sectionOp
+    .split('')
+    .filter(item => item !== '=' && item !== '+')
+    .join('')
   const handleAC = () => {
     setValor('')
     setTextAC('AC')
@@ -32,24 +35,27 @@ function App () {
   }
   const handleResult = () => {
     if (sectionOp.at(-1) === '+') {
-      const valueSecction = sectionOp
-        .split('')
-        .filter(item => item !== '=' && item !== '+')
-        .join('')
-      console.log(valueSecction)
+      // const valueSecction = sectionOp
+      //   .split('')
+      //   .filter(item => item !== '=' && item !== '+')
+      //   .join('')
       setValor(Number(valueSecction) + Number(valor))
       setSectioOp(`=${Number(valueSecction) + Number(valor)}`)
     }
   }
   const handlePlus = () => {
-    console.log(valor === '')
-    if ((sectionOp === '' && valor === '')) {
+    if (valor === '' && sectionOp === '') {
       setSectioOp('=0+')
     }
-    if (sectionOp !== '') {
+    if (valor !== '') {
       setSectioOp(`=${valor}+`)
     }
-    setValor(valor.toString().concat('+'))
+    if (valor !== '' && sectionOp !== '') {
+      setSectioOp(`=${Number(valueSecction) + Number(valor)}+`)
+    }
+    if (Number(valueSecction) === Number(valor)) {
+      setSectioOp(`=${valor}+`)
+    }
     setValor('')
   }
 
